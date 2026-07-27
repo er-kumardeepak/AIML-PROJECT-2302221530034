@@ -1,0 +1,40 @@
+{
+  "linear_regression": {
+    "baseline": {
+      "r2": 0.9565,
+      "mae": 9807.88,
+      "rmse": 13537.36
+    },
+    "engineered": {
+      "r2": 0.9567,
+      "mae": 9789.9,
+      "rmse": 13502.79
+    },
+    "improvement": {
+      "r2_pct": 0.02,
+      "mae_pct": -0.18,
+      "rmse_pct": -0.26
+    }
+  },
+  "random_forest": {
+    "r2": 0.9637,
+    "mae": 8516.99,
+    "rmse": 12369.78
+  },
+  "xgboost": {
+    "r2": 0.966,
+    "mae": 8320.79,
+    "rmse": 11971.31
+  },
+  "best_model": "XGBoost",
+  "dataset": {
+    "samples": 6700,
+    "features_original": 5,
+    "features_engineered": 2,
+    "job_titles": 48,
+    "salary_mean": 116972,
+    "salary_median": 102500,
+    "salary_min": 26187,
+    "salary_max": 413237
+  }
+}

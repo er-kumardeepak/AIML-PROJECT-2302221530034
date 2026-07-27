@@ -1,0 +1,211 @@
+"""
+Generate a realistic synthetic Salary Prediction dataset
+based on the Kaggle 'Salary Prediction for Beginner' dataset by rkiattisak.
+"""
+
+import numpy as np
+import pandas as pd
+
+np.random.seed(42)
+
+NUM_SAMPLES = 6700
+
+# ---- Job Titles with realistic salary baselines ----
+job_titles = [
+    "Software Engineer", "Data Scientist", "Data Analyst", "Machine Learning Engineer",
+    "Senior Software Engineer", "Senior Data Scientist", "Junior Developer",
+    "DevOps Engineer", "Product Manager", "Project Manager", "Business Analyst",
+    "Marketing Manager", "Sales Manager", "HR Manager", "Financial Analyst",
+    "Accountant", "Chief Executive Officer", "Chief Technology Officer",
+    "Chief Financial Officer", "Operations Manager", "Graphic Designer",
+    "UX Designer", "UI Designer", "IT Support Specialist", "Network Engineer",
+    "Database Administrator", "Systems Administrator", "Security Engineer",
+    "Cloud Architect", "Technical Writer", "Research Scientist", "Statistician",
+    "Economist", "Consultant", "Director of Engineering", "Vice President",
+    "Analyst", "Associate", "Intern", "Customer Support Specialist",
+    "Healthcare Specialist", "Teacher", "Professor", "Legal Assistant",
+    "Lawyer", "Architect", "Civil Engineer", "Mechanical Engineer",
+    "Electrical Engineer", "Biomedical Engineer"
+]
+
+# Base salary by job title (annual in thousands)
+job_salary_base = {
+    "Software Engineer": 85, "Data Scientist": 95, "Data Analyst": 65,
+    "Machine Learning Engineer": 110, "Senior Software Engineer": 130,
+    "Senior Data Scientist": 140, "Junior Developer": 55,
+    "DevOps Engineer": 100, "Product Manager": 105, "Project Manager": 85,
+    "Business Analyst": 70, "Marketing Manager": 75, "Sales Manager": 80,
+    "HR Manager": 70, "Financial Analyst": 75, "Accountant": 60,
+    "Chief Executive Officer": 180, "Chief Technology Officer": 170,
+    "Chief Financial Officer": 165, "Operations Manager": 85,
+    "Graphic Designer": 50, "UX Designer": 80, "UI Designer": 75,
+    "IT Support Specialist": 45, "Network Engineer": 80,
+    "Database Administrator": 85, "Systems Administrator": 70,
+    "Security Engineer": 105, "Cloud Architect": 135, "Technical Writer": 60,
+    "Research Scientist": 90, "Statistician": 80, "Economist": 85,
+    "Consultant": 90, "Director of Engineering": 155, "Vice President": 160,
+    "Analyst": 60, "Associate": 55, "Intern": 35,
+    "Customer Support Specialist": 40, "Healthcare Specialist": 65,
+    "Teacher": 50, "Professor": 85, "Legal Assistant": 45,
+    "Lawyer": 120, "Architect": 85, "Civil Engineer": 75,
+    "Mechanical Engineer": 78, "Electrical Engineer": 82,
+    "Biomedical Engineer": 80
+}
+
+education_levels = ["High School", "Bachelor's", "Master's", "PhD"]
+education_salary_multiplier = {
+    "High School": 0.85,
+    "Bachelor's": 1.0,
+    "Master's": 1.15,
+    "PhD": 1.30
+}
+
+genders = ["Male", "Female"]
+
+# Age distribution: roughly 21-65
+ages = np.random.randint(21, 66, size=NUM_SAMPLES)
+
+# Gender distribution (roughly balanced)
+genders_arr = np.random.choice(genders, size=NUM_SAMPLES, p=[0.52, 0.48])
+
+# Education level correlated with age
+education_arr = []
+for age in ages:
+    if age < 25:
+        p = [0.20, 0.55, 0.20, 0.05]
+    elif age < 35:
+        p = [0.08, 0.40, 0.35, 0.17]
+    elif age < 50:
+        p = [0.05, 0.30, 0.40, 0.25]
+    else:
+        p = [0.10, 0.35, 0.35, 0.20]
+    education_arr.append(np.random.choice(education_levels, p=p))
+
+# Job titles (more senior roles for older, more experienced)
+job_titles_arr = []
+years_exp_arr = []
+
+for i in range(NUM_SAMPLES):
+    age = ages[i]
+    edu = education_arr[i]
+
+    # Years of experience based on age and education
+    # Roughly: after education, start working
+    if edu == "High School":
+        min_exp = max(0, age - 18)
+    elif edu == "Bachelor's":
+        min_exp = max(0, age - 22)
+    elif edu == "Master's":
+        min_exp = max(0, age - 24)
+    else:  # PhD
+        min_exp = max(0, age - 28)
+
+    # Add some randomness
+    years_exp = int(np.random.uniform(0, max(1, min_exp + 1)))
+
+    # Cap experience
+    years_exp = min(years_exp, 45)
+    years_exp_arr.append(years_exp)
+
+    # Select job title based on experience
+    if years_exp < 2:
+        # Entry level
+        pool = ["Intern", "Junior Developer", "Analyst", "Associate",
+                "Customer Support Specialist", "IT Support Specialist"]
+    elif years_exp < 5:
+        pool = ["Junior Developer", "Data Analyst", "Business Analyst",
+                "Software Engineer", "Graphic Designer", "UX Designer",
+                "IT Support Specialist", "Analyst", "Associate",
+                "Customer Support Specialist", "Teacher", "Financial Analyst",
+                "Accountant", "Healthcare Specialist"]
+    elif years_exp < 10:
+        pool = ["Software Engineer", "Data Scientist", "Data Analyst",
+                "DevOps Engineer", "Product Manager", "Project Manager",
+                "Marketing Manager", "Sales Manager", "HR Manager",
+                "Financial Analyst", "Accountant", "Network Engineer",
+                "Systems Administrator", "Security Engineer", "UX Designer",
+                "Consultant", "Statistician", "Civil Engineer",
+                "Mechanical Engineer", "Electrical Engineer", "Architect",
+                "Database Administrator", "Biomedical Engineer"]
+    elif years_exp < 15:
+        pool = ["Software Engineer", "Data Scientist", "Machine Learning Engineer",
+                "Senior Software Engineer", "DevOps Engineer", "Product Manager",
+                "Project Manager", "Operations Manager", "Marketing Manager",
+                "Sales Manager", "Consultant", "Research Scientist",
+                "Statistician", "Economist", "Database Administrator",
+                "Security Engineer", "Cloud Architect", "Professor",
+                "Lawyer", "Architect", "Civil Engineer", "Electrical Engineer",
+                "Mechanical Engineer", "Technical Writer"]
+    else:
+        pool = ["Senior Software Engineer", "Senior Data Scientist",
+                "Machine Learning Engineer", "Director of Engineering",
+                "Vice President", "Chief Technology Officer",
+                "Chief Executive Officer", "Chief Financial Officer",
+                "Product Manager", "Operations Manager", "Cloud Architect",
+                "Professor", "Lawyer", "Consultant", "Research Scientist",
+                "Security Engineer", "Database Administrator", "Economist"]
+
+    job_titles_arr.append(np.random.choice(pool))
+
+# Calculate Salary
+salaries = []
+for i in range(NUM_SAMPLES):
+    job = job_titles_arr[i]
+    edu = education_arr[i]
+    exp = years_exp_arr[i]
+    age = ages[i]
+    gender = genders_arr[i]
+
+    # Base salary from job title
+    base = job_salary_base.get(job, 70)
+
+    # Education multiplier
+    edu_mult = education_salary_multiplier[edu]
+
+    # Experience: salary increases with experience but with diminishing returns
+    exp_factor = 1 + 0.03 * exp - 0.0003 * exp ** 2
+    exp_factor = max(exp_factor, 0.5)
+
+    # Age factor (slight penalty for very young, slight bonus for mid-career)
+    age_factor = 1 - 0.002 * (age - 40) ** 2 / 100
+    age_factor = max(age_factor, 0.85)
+
+    # Gender bias (slight, to reflect real-world disparities)
+    gender_factor = 1.0 if gender == "Male" else 0.97
+
+    # Random noise
+    noise = np.random.normal(1, 0.08)
+
+    salary = base * edu_mult * exp_factor * age_factor * gender_factor * noise * 1000
+    salary = max(salary, 20000)  # Minimum salary floor
+    salaries.append(int(round(salary)))
+
+# Create DataFrame
+df = pd.DataFrame({
+    "Age": ages,
+    "Gender": genders_arr,
+    "Education Level": education_arr,
+    "Job Title": job_titles_arr,
+    "Years of Experience": years_exp_arr,
+    "Salary": salaries
+})
+
+# Shuffle the data
+df = df.sample(frac=1, random_state=42).reset_index(drop=True)
+
+# Save to CSV
+output_path = r"D:\Salary_Prediction\Dataset\salary_prediction_data.csv"
+df.to_csv(output_path, index=False)
+print(f"Dataset saved to: {output_path}")
+print(f"Shape: {df.shape}")
+print(f"\nColumns: {list(df.columns)}")
+print(f"\nSalary range: ${df['Salary'].min():,.0f} - ${df['Salary'].max():,.0f}")
+print(f"Average salary: ${df['Salary'].mean():,.0f}")
+print(f"Median salary: ${df['Salary'].median():,.0f}")
+print(f"\nUnique Job Titles: {df['Job Title'].nunique()}")
+print(f"\nSample data:")
+print(df.head(10))
+print(f"\nEducation distribution:")
+print(df["Education Level"].value_counts())
+print(f"\nGender distribution:")
+print(df["Gender"].value_counts())
