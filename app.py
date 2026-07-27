@@ -804,7 +804,7 @@ elif page.startswith("ℹ️"):
 
     st.markdown("### 📁 Repository Structure")
     st.code("""
-AIML-Project-RollNo-XXXXX/
+AIML-Project-230222153034/
 ├── Dataset/
 │   ├── salary_prediction_data.csv    # Original dataset (6,700 records)
 │   ├── generate_salary_data.py       # Data generation script
@@ -823,8 +823,8 @@ AIML-Project-RollNo-XXXXX/
     st.markdown("### 🚀 How to Run Locally")
     st.code("""
 # 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/AIML-Project-RollNo-XXXXX.git
-cd AIML-Project-RollNo-XXXXX
+git clone https://github.com/er-kumardeepak/AIML-Project-230222153034.git
+cd AIML-Project-230222153034
 
 # 2. Install dependencies
 pip install -r requirements.txt

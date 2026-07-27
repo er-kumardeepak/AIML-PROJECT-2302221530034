@@ -81,8 +81,8 @@ pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/AIML-Project-RollNo-XXXXX.git
-cd AIML-Project-RollNo-XXXXX
+git clone https://github.com/er-kumardeepak/AIML-Project-230222153034.git
+cd AIML-Project-230222153034
 ```
 
 ---
@@ -293,7 +293,7 @@ Tree-based models (Random Forest, XGBoost) benefited more from the engineered fe
 ## Project Structure
 
 ```
-AIML-Project-RollNo-XXXXX/
+AIML-Project-230222153034/
 ├── Dataset/
 │   ├── salary_prediction_data.csv    # Original dataset
 │   ├── generate_salary_data.py       # Data generation script
@@ -358,7 +358,7 @@ git init
 git add .
 git commit -m "Initial commit: Salary Prediction Project"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/AIML-Project-RollNo-XXXXX.git
+git remote add origin https://github.com/er-kumardeepak/AIML-Project-230222153034.git
 git push -u origin main
 ```
 
@@ -370,7 +370,7 @@ git push -u origin main
    - Click **Deploy!**
 
 3. **Your app will be live at:**
-   `https://YOUR_USERNAME-AIML-PROJECT-ROLLNO-XXXXX.streamlit.app`
+   `https://er-kumardeepak-AIML-Project-230222153034.streamlit.app`
 
 > ⚡ **No configuration needed** — Streamlit Cloud auto-detects `requirements.txt` and installs dependencies.
 
