@@ -1,8 +1,3 @@
-"""
-Generate a realistic synthetic Salary Prediction dataset
-based on the Kaggle 'Salary Prediction for Beginner' dataset by rkiattisak.
-"""
-
 import numpy as np
 import pandas as pd
 
@@ -10,7 +5,6 @@ np.random.seed(42)
 
 NUM_SAMPLES = 6700
 
-# ---- Job Titles with realistic salary baselines ----
 job_titles = [
     "Software Engineer", "Data Scientist", "Data Analyst", "Machine Learning Engineer",
     "Senior Software Engineer", "Senior Data Scientist", "Junior Developer",
@@ -28,7 +22,6 @@ job_titles = [
     "Electrical Engineer", "Biomedical Engineer"
 ]
 
-# Base salary by job title (annual in thousands)
 job_salary_base = {
     "Software Engineer": 85, "Data Scientist": 95, "Data Analyst": 65,
     "Machine Learning Engineer": 110, "Senior Software Engineer": 130,
@@ -62,13 +55,10 @@ education_salary_multiplier = {
 
 genders = ["Male", "Female"]
 
-# Age distribution: roughly 21-65
 ages = np.random.randint(21, 66, size=NUM_SAMPLES)
 
-# Gender distribution (roughly balanced)
 genders_arr = np.random.choice(genders, size=NUM_SAMPLES, p=[0.52, 0.48])
 
-# Education level correlated with age
 education_arr = []
 for age in ages:
     if age < 25:
@@ -81,7 +71,6 @@ for age in ages:
         p = [0.10, 0.35, 0.35, 0.20]
     education_arr.append(np.random.choice(education_levels, p=p))
 
-# Job titles (more senior roles for older, more experienced)
 job_titles_arr = []
 years_exp_arr = []
 
@@ -89,27 +78,20 @@ for i in range(NUM_SAMPLES):
     age = ages[i]
     edu = education_arr[i]
 
-    # Years of experience based on age and education
-    # Roughly: after education, start working
     if edu == "High School":
         min_exp = max(0, age - 18)
     elif edu == "Bachelor's":
         min_exp = max(0, age - 22)
     elif edu == "Master's":
         min_exp = max(0, age - 24)
-    else:  # PhD
+    else:
         min_exp = max(0, age - 28)
 
-    # Add some randomness
     years_exp = int(np.random.uniform(0, max(1, min_exp + 1)))
-
-    # Cap experience
     years_exp = min(years_exp, 45)
     years_exp_arr.append(years_exp)
 
-    # Select job title based on experience
     if years_exp < 2:
-        # Entry level
         pool = ["Intern", "Junior Developer", "Analyst", "Associate",
                 "Customer Support Specialist", "IT Support Specialist"]
     elif years_exp < 5:
@@ -147,7 +129,6 @@ for i in range(NUM_SAMPLES):
 
     job_titles_arr.append(np.random.choice(pool))
 
-# Calculate Salary
 salaries = []
 for i in range(NUM_SAMPLES):
     job = job_titles_arr[i]
@@ -156,31 +137,19 @@ for i in range(NUM_SAMPLES):
     age = ages[i]
     gender = genders_arr[i]
 
-    # Base salary from job title
     base = job_salary_base.get(job, 70)
-
-    # Education multiplier
     edu_mult = education_salary_multiplier[edu]
-
-    # Experience: salary increases with experience but with diminishing returns
     exp_factor = 1 + 0.03 * exp - 0.0003 * exp ** 2
     exp_factor = max(exp_factor, 0.5)
-
-    # Age factor (slight penalty for very young, slight bonus for mid-career)
     age_factor = 1 - 0.002 * (age - 40) ** 2 / 100
     age_factor = max(age_factor, 0.85)
-
-    # Gender bias (slight, to reflect real-world disparities)
     gender_factor = 1.0 if gender == "Male" else 0.97
-
-    # Random noise
     noise = np.random.normal(1, 0.08)
 
     salary = base * edu_mult * exp_factor * age_factor * gender_factor * noise * 1000
-    salary = max(salary, 20000)  # Minimum salary floor
+    salary = max(salary, 20000)
     salaries.append(int(round(salary)))
 
-# Create DataFrame
 df = pd.DataFrame({
     "Age": ages,
     "Gender": genders_arr,
@@ -190,11 +159,9 @@ df = pd.DataFrame({
     "Salary": salaries
 })
 
-# Shuffle the data
 df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 
-# Save to CSV
-output_path = r"D:\Salary_Prediction\Dataset\salary_prediction_data.csv"
+output_path = r"D:\\Salary_Prediction\\Dataset\\salary_prediction_data.csv"
 df.to_csv(output_path, index=False)
 print(f"Dataset saved to: {output_path}")
 print(f"Shape: {df.shape}")

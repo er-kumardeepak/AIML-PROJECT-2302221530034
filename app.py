@@ -1,8 +1,3 @@
-"""
-Salary Prediction - Streamlit Web Application
-Interactive UI for predicting salaries using trained ML models
-"""
-
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -14,16 +9,12 @@ import seaborn as sns
 import os
 import json
 
-
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
 import xgboost as xgb
 
-# ============================================================
-# PAGE CONFIG
-# ============================================================
 st.set_page_config(
     page_title="Salary Predictor Pro",
     page_icon="💰",
@@ -31,17 +22,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ============================================================
-# PATH CONFIG
-# ============================================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_PATH = os.path.join(BASE_DIR, 'Dataset', 'salary_prediction_data.csv')
 METRICS_PATH = os.path.join(BASE_DIR, 'Dataset', 'metrics.json')
 IMAGES_DIR = os.path.join(BASE_DIR, 'Images')
 
-# ============================================================
-# CUSTOM CSS
-# ============================================================
 st.markdown("""
 <style>
     .main-header {
@@ -115,18 +100,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ============================================================
-# SESSION STATE INIT
-# ============================================================
 if 'model_trained' not in st.session_state:
     st.session_state.model_trained = False
 if 'page' not in st.session_state:
     st.session_state.page = 'predict'
 
-
-# ============================================================
-# DATA LOADING & CACHING
-# ============================================================
 @st.cache_data
 def load_data():
     df = pd.read_csv(DATA_PATH)
@@ -139,7 +117,6 @@ def load_metrics():
 
 @st.cache_resource
 def bucket_experience_level(years):
-    """Categorize years of experience into career stages."""
     if years < 2:
         return 'Entry'
     elif years < 5:
@@ -151,12 +128,9 @@ def bucket_experience_level(years):
     else:
         return 'Expert'
 
-
 def train_models():
-    """Train all models and return them along with preprocessors."""
     df = load_data()
 
-    # Clean
     df = df.drop_duplicates().reset_index(drop=True)
     edu_map = {"Bachelor's Degree": "Bachelor's", "Masters": "Master's",
                "Master's Degree": "Master's", "phd": "PhD", "Highschool": "High School"}
@@ -165,7 +139,6 @@ def train_models():
     rare = job_counts[job_counts < 30].index
     df['Job Title'] = df['Job Title'].apply(lambda x: 'Other' if x in rare else x)
 
-    # Feature Engineering
     df_fe = df.copy()
     df_fe['experience_level'] = df_fe['Years of Experience'].apply(bucket_experience_level)
     df_fe['age_experience_ratio'] = np.where(
@@ -176,39 +149,32 @@ def train_models():
 
     y = df['Salary']
 
-    # Baseline features
     X_base = pd.get_dummies(df[['Age', 'Gender', 'Education Level', 'Job Title', 'Years of Experience']],
                             columns=['Gender', 'Education Level', 'Job Title'], drop_first=True, dtype=int)
 
-    # Engineered features
     X_eng = pd.get_dummies(df_fe[['Age', 'Gender', 'Education Level', 'Job Title',
                                    'Years of Experience', 'experience_level', 'age_experience_ratio']],
                            columns=['Gender', 'Education Level', 'Job Title', 'experience_level'],
                            drop_first=True, dtype=int)
 
-    # Split
     X_train_e, X_test_e, y_train, y_test = train_test_split(X_eng, y, test_size=0.2, random_state=42)
     X_train_b, X_test_b, _, _ = train_test_split(X_base, y, test_size=0.2, random_state=42)
 
-    # Train models
     lr_b = LinearRegression().fit(X_train_b, y_train)
     lr_e = LinearRegression().fit(X_train_e, y_train)
 
-    # RF with best params from GridSearchCV
     rf_best = RandomForestRegressor(
         n_estimators=300, max_depth=None, min_samples_split=5,
         min_samples_leaf=1, random_state=42, n_jobs=-1
     )
     rf_best.fit(X_train_e, y_train)
 
-    # XGBoost with best params from GridSearchCV
     xgb_best = xgb.XGBRegressor(
         n_estimators=300, max_depth=3, learning_rate=0.2,
         subsample=0.8, colsample_bytree=1.0, random_state=42, verbosity=0
     )
     xgb_best.fit(X_train_e, y_train)
 
-    # Store column names for preprocessing
     base_columns = X_train_b.columns.tolist()
     eng_columns = X_train_e.columns.tolist()
 
@@ -223,12 +189,7 @@ def train_models():
         'y_test': y_test
     }
 
-
-# ============================================================
-# PREPROCESSING FUNCTIONS
-# ============================================================
 def preprocess_input_baseline(age, gender, education, job_title, experience, base_columns):
-    """Convert user input to baseline feature vector matching training columns."""
     data = {
         'Age': age,
         'Gender': gender,
@@ -239,16 +200,13 @@ def preprocess_input_baseline(age, gender, education, job_title, experience, bas
     df_input = pd.DataFrame([data])
     df_input = pd.get_dummies(df_input, columns=['Gender', 'Education Level', 'Job Title'],
                               drop_first=True, dtype=int)
-    # Align columns
     for col in base_columns:
         if col not in df_input.columns:
             df_input[col] = 0
     df_input = df_input[base_columns]
     return df_input
 
-
 def preprocess_input_engineered(age, gender, education, job_title, experience, eng_columns):
-    """Convert user input to engineered feature vector matching training columns."""
     exp_level = bucket_experience_level(experience)
     age_exp_ratio = age / experience if experience > 0 else age * 2
 
@@ -264,17 +222,12 @@ def preprocess_input_engineered(age, gender, education, job_title, experience, e
     df_input = pd.DataFrame([data])
     df_input = pd.get_dummies(df_input, columns=['Gender', 'Education Level', 'Job Title', 'experience_level'],
                               drop_first=True, dtype=int)
-    # Align columns
     for col in eng_columns:
         if col not in df_input.columns:
             df_input[col] = 0
     df_input = df_input[eng_columns]
     return df_input
 
-
-# ============================================================
-# SIDEBAR NAVIGATION
-# ============================================================
 st.sidebar.markdown("""
 <div style="text-align:center; padding: 1rem 0;">
     <span style="font-size:3rem;">💰</span>
@@ -298,24 +251,17 @@ st.sidebar.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-
-# ============================================================
-# PAGE 1: PREDICT SALARY
-# ============================================================
 if page.startswith("🎯"):
     st.markdown('<div class="main-header">🎯 Salary Predictor</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Enter candidate details to get a data-driven salary prediction</div>', unsafe_allow_html=True)
 
-    # Load data for dropdowns
     df = load_data()
     metrics = load_metrics()
 
-    # Get unique values for dropdowns
     edu_levels = sorted(['High School', "Bachelor's", "Master's", 'PhD'])
     job_titles = sorted(df['Job Title'].unique().tolist())
     genders = ['Male', 'Female']
 
-    # Input form
     with st.container():
         st.markdown('<div class="card">', unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
@@ -338,7 +284,6 @@ if page.startswith("🎯"):
 
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Predict button
     predict_col1, predict_col2, predict_col3 = st.columns([1, 2, 1])
     with predict_col2:
         predict_btn = st.button("💫 Predict Salary", use_container_width=True, type="primary")
@@ -347,17 +292,14 @@ if page.startswith("🎯"):
         with st.spinner("🤖 Running prediction models..."):
             models = train_models()
 
-            # Preprocess
             X_base_input = preprocess_input_baseline(age, gender, education, job_title, experience, models['base_columns'])
             X_eng_input = preprocess_input_engineered(age, gender, education, job_title, experience, models['eng_columns'])
 
-            # Predictions
             pred_lr_b = models['lr_baseline'].predict(X_base_input)[0]
             pred_lr_e = models['lr_engineered'].predict(X_eng_input)[0]
             pred_rf = models['rf'].predict(X_eng_input)[0]
             pred_xgb = models['xgb'].predict(X_eng_input)[0]
 
-            # Map model choice
             model_map = {
                 "XGBoost (Best - R² 0.9655)": ("XGBoost (Tuned)", pred_xgb, "#1E6BB8"),
                 "Random Forest (R² 0.9645)": ("Random Forest (Tuned)", pred_rf, "#0B8754"),
@@ -366,7 +308,6 @@ if page.startswith("🎯"):
             }
             selected_name, selected_pred, selected_color = model_map[model_choice]
 
-        # Show prediction
         st.markdown("""
         <div style="height: 1rem;"></div>
         """, unsafe_allow_html=True)
@@ -392,7 +333,6 @@ if page.startswith("🎯"):
             st.dataframe(profile_df, hide_index=True, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-        # All models comparison
         st.markdown("""
         <div style="height: 1rem;"></div>
         <h3>📊 All Model Predictions</h3>
@@ -415,7 +355,6 @@ if page.startswith("🎯"):
 
         st.dataframe(pred_data, hide_index=True, use_container_width=True)
 
-        # Bar chart comparison
         st.markdown("### 📈 Prediction Comparison")
         fig, ax = plt.subplots(figsize=(10, 5))
         models_names = ['LR\nBaseline', 'LR\nEngineered', 'RF\nTuned', 'XGBoost\nTuned']
@@ -432,7 +371,6 @@ if page.startswith("🎯"):
         st.pyplot(fig)
         plt.close()
 
-        # Salary range context
         st.markdown("""
         <div style="height: 0.5rem;"></div>
         """, unsafe_allow_html=True)
@@ -457,10 +395,6 @@ if page.startswith("🎯"):
             job title, education level, age, and engineered features.
             """)
 
-
-# ============================================================
-# PAGE 2: EDA & INSIGHTS
-# ============================================================
 elif page.startswith("📊"):
     st.markdown('<div class="main-header">📊 Exploratory Data Analysis</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Visual insights from the salary prediction dataset</div>', unsafe_allow_html=True)
@@ -468,7 +402,6 @@ elif page.startswith("📊"):
     df = load_data()
     metrics = load_metrics()
 
-    # Dataset stats
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         st.markdown(f"""
@@ -501,7 +434,6 @@ elif page.startswith("📊"):
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Visualizations tabs
     tab1, tab2, tab3, tab4, tab5 = st.tabs(
         ["📈 Salary Distribution", "🎓 Education & Gender", "📅 Experience vs Salary",
          "💼 Top Job Titles", "🔗 Correlations"]
@@ -511,7 +443,6 @@ elif page.startswith("📊"):
         st.markdown("### Salary Distribution")
         st.markdown("The salary data is right-skewed — most salaries fall between **$50K–$150K**.")
 
-        # Check if images exist, if so display them, otherwise generate on the fly
         img_path = os.path.join(IMAGES_DIR, 'salary_distribution.png')
         if os.path.exists(img_path):
             st.image(img_path, use_container_width=True)
@@ -622,17 +553,12 @@ elif page.startswith("📊"):
         | Age ↔ Experience | **0.6688** | Moderate — older candidates tend to have more experience |
         """)
 
-
-# ============================================================
-# PAGE 3: MODEL PERFORMANCE
-# ============================================================
 elif page.startswith("📈"):
     st.markdown('<div class="main-header">📈 Model Performance</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Detailed comparison of all models with evaluation metrics</div>', unsafe_allow_html=True)
 
     metrics = load_metrics()
 
-    # Overview metrics
     st.markdown("### 🏆 Best Model: XGBoost (Tuned)")
     st.markdown(f"""
     <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin: 1rem 0;">
@@ -651,7 +577,6 @@ elif page.startswith("📈"):
     </div>
     """, unsafe_allow_html=True)
 
-    # Comparison table
     st.markdown("### 📊 Model Comparison Table")
     comp_data = pd.DataFrame({
         'Model': ['Linear Regression (Baseline)', 'Linear Regression (Engineered)',
@@ -671,7 +596,6 @@ elif page.startswith("📈"):
     })
     st.dataframe(comp_data, hide_index=True, use_container_width=True)
 
-    # Visualizations
     st.markdown("### 📈 Visual Comparison")
 
     img_path = os.path.join(IMAGES_DIR, 'model_comparison.png')
@@ -682,7 +606,6 @@ elif page.startswith("📈"):
     if os.path.exists(img_path2):
         st.image(img_path2, use_container_width=True)
 
-    # Hyperparameter info
     with st.expander("🔧 Hyperparameter Tuning Details (GridSearchCV)"):
         st.markdown(f"""
         **Random Forest Grid Search:**
@@ -716,10 +639,6 @@ elif page.startswith("📈"):
         - MAE decreased by {metrics['linear_regression']['improvement']['mae_pct']}%
         """)
 
-
-# ============================================================
-# PAGE 4: ABOUT PROJECT
-# ============================================================
 elif page.startswith("ℹ️"):
     st.markdown('<div class="main-header">ℹ️ About This Project</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Salary Prediction with Multiple Models — AIML Mini Project</div>', unsafe_allow_html=True)
@@ -783,7 +702,6 @@ elif page.startswith("ℹ️"):
         </div>
         """, unsafe_allow_html=True)
 
-    # Tech stack
     st.markdown("### 🛠️ Technologies Used")
     tech_cols = st.columns(5)
     techs = [
@@ -819,7 +737,6 @@ AIML-Project-230222153034/
 └── README.md                         # Project documentation
     """, language="text")
 
-    # How to run
     st.markdown("### 🚀 How to Run Locally")
     st.code("""
 # 1. Clone the repository
