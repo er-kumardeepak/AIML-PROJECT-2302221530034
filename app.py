@@ -32,62 +32,80 @@ st.markdown("""
     .main-header {
         font-size: 2.8rem;
         font-weight: 800;
-        color: #1E3A5F;
+        color: #38BDF8 !important;
         margin-bottom: 0.2rem;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     .sub-header {
         font-size: 1.1rem;
-        color: #5A7A9A;
+        color: #94A3B8 !important;
         margin-bottom: 1.5rem;
+        font-weight: 500;
     }
     .metric-card {
-        background: linear-gradient(135deg, #f0f4f8, #e2eaf3);
+        background: #1E293B !important;
         border-radius: 12px;
         padding: 1.2rem;
         text-align: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        border: 1px solid #d0dce8;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+        border: 1px solid #334155 !important;
     }
     .metric-value {
         font-size: 1.8rem;
-        font-weight: 700;
-        color: #1E3A5F;
+        font-weight: 800;
+        color: #38BDF8 !important;
     }
     .metric-label {
         font-size: 0.85rem;
-        color: #6B8BAE;
+        color: #94A3B8 !important;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
     .highlight-green {
-        color: #0B8754;
+        color: #34D399 !important;
         font-weight: 700;
     }
     .highlight-blue {
-        color: #1E6BB8;
+        color: #60A5FA !important;
         font-weight: 700;
     }
     .card {
-        background: white;
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        border: 1px solid #eaeef2;
-        margin-bottom: 1rem;
+        background: #1E293B !important;
+        border-radius: 14px;
+        padding: 1.6rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        border: 1px solid #334155 !important;
+        margin-bottom: 1.2rem;
+        color: #F8FAFC !important;
+    }
+    .card h1, .card h2, .card h3, .card h4, .card h5, .card h6 {
+        color: #60A5FA !important;
+        font-weight: 700 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0.8rem !important;
+    }
+    .card p, .card li, .card span, .card div, .card ol, .card ul {
+        color: #E2E8F0 !important;
+        line-height: 1.6;
+    }
+    .card strong {
+        color: #F8FAFC !important;
+        font-weight: 700 !important;
     }
     .prediction-box {
         background: linear-gradient(135deg, #1E3A5F, #2B5A87);
         border-radius: 16px;
         padding: 2rem;
         text-align: center;
-        color: white;
-        box-shadow: 0 8px 24px rgba(30,58,95,0.2);
+        color: #FFFFFF !important;
+        box-shadow: 0 8px 24px rgba(30,58,95,0.3);
     }
     .prediction-amount {
         font-size: 3.2rem;
         font-weight: 800;
         margin: 0.5rem 0;
+        color: #38BDF8 !important;
     }
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
@@ -714,9 +732,9 @@ elif page.startswith("ℹ️"):
     for i, (emoji, name) in enumerate(techs):
         with tech_cols[i]:
             st.markdown(f"""
-            <div style="text-align:center; padding:1rem; background:#f8fafc; border-radius:10px;">
+            <div style="text-align:center; padding:1rem; background:#1E293B; border-radius:10px; border:1px solid #334155;">
                 <div style="font-size:2rem;">{emoji}</div>
-                <div style="font-weight:600; color:#1E3A5F;">{name}</div>
+                <div style="font-weight:600; color:#38BDF8;">{name}</div>
             </div>
             """, unsafe_allow_html=True)
 
