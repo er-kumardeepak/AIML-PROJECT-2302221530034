@@ -7,7 +7,7 @@
 [![Pandas](https://img.shields.io/badge/Pandas-2.3+-150458?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-An end-to-end Machine Learning solution designed to assist **Human Resources (HR) and Talent Acquisition teams** in determining competitive, fair, data-driven, and bias-aware salary offers. The project encompasses synthetic dataset generation matching real-world distributions, comprehensive Exploratory Data Analysis (EDA), domain-specific Feature Engineering, hyperparameter-tuned predictive modeling (Linear Regression, Random Forest, XGBoost), and an interactive multi-tab **Streamlit Web Application**.
+An end-to-end Machine Learning solution designed to assist **Human Resources (HR) and Talent Acquisition teams** in determining competitive, fair, data-driven, and bias-aware salary offers benchmarked to the **Indian Job Market in Rupees (₹ / LPA)**. The project encompasses synthetic dataset generation matching real-world Indian salary distributions, comprehensive Exploratory Data Analysis (EDA), domain-specific Feature Engineering, hyperparameter-tuned predictive modeling (Linear Regression, Random Forest, XGBoost), and an interactive multi-tab **Streamlit Web Application**.
 
 ---
 
@@ -36,9 +36,9 @@ An end-to-end Machine Learning solution designed to assist **Human Resources (HR
 In modern talent acquisition, manual compensation decisions often suffer from inconsistency, lack of benchmarking data, and unconscious bias regarding demographic or educational background. HR departments need an automated, data-driven tool to estimate fair baseline market salaries based on objective candidate attributes: **Age, Gender, Education Level, Job Title, and Years of Experience**.
 
 ### Business Value Proposition
-- **Standardized Compensation**: Eliminates arbitrary salary offers by providing statistical compensation ranges derived from 6,700 candidate records.
+- **Standardized Compensation in INR (₹ / LPA)**: Eliminates arbitrary salary offers by providing statistical compensation ranges in Indian Rupees derived from 6,700 candidate records.
 - **Pay Equity & Bias Awareness**: Evaluates compensation models across demographics to ensure equal pay for equal experience and education.
-- **Data-Driven Hiring Offers**: Reduces candidate drop-out rates during negotiation by recommending market-competitive compensation packages.
+- **Data-Driven Hiring Offers**: Reduces candidate drop-out rates during negotiation by recommending market-competitive compensation packages in ₹.
 - **Explainable ML Predictions**: Highlights key drivers of compensation (e.g., career phase transitions, executive title premiums, and career efficiency ratios).
 
 ---
@@ -50,14 +50,14 @@ The project includes a production-ready interactive dashboard built with **Strea
 ### Key Modules:
 1. 🎯 **Salary Predictor**:
    - Allows HR managers to input candidate profiles via interactive sidebar controls (Dropdowns, Sliders, Number Inputs).
-   - Generates instantaneous salary predictions using the trained **XGBoost (Tuned)** model alongside lower/upper confidence bounds ($\pm 1 \text{ MAE}$).
+   - Generates instantaneous salary predictions in **Rupees (₹)** using the trained **XGBoost (Tuned)** model alongside lower/upper confidence bounds ($\pm 1 \text{ MAE}$).
    - Displays real-time feature breakdown (e.g., automatically computed `experience_level` bucket and `age_experience_ratio`).
 
 2. 📊 **Exploratory Data Analysis (EDA)**:
    - Interactive visual exploration of salary distributions, correlations, box plots across education/gender, and top-paying job titles.
 
 3. 📈 **Model Performance & Comparison**:
-   - Interactive comparisons of $R^2$, MAE, and RMSE metrics across all trained models (Linear Regression Baseline, Linear Regression Engineered, Tuned Random Forest, and Tuned XGBoost).
+   - Interactive comparisons of $R^2$, MAE, and RMSE metrics in ₹ across all trained models (Linear Regression Baseline, Linear Regression Engineered, Tuned Random Forest, and Tuned XGBoost).
    - Side-by-side metric cards and diagnostic plots (Predicted vs. Actual, Residuals).
 
 4. 💡 **Feature Engineering Impact**:
@@ -69,7 +69,7 @@ The project includes a production-ready interactive dashboard built with **Strea
 
 ```mermaid
 graph TD
-    A[Raw Dataset / Synthetic Generation<br/>6,700 Records] --> B[Data Preprocessing & Cleaning]
+    A[Raw Dataset / Synthetic Generation<br/>6,700 Records in Realistic ₹ LPA] --> B[Data Preprocessing & Cleaning]
     B --> C[Education Level Standardization]
     B --> D[Rare Job Title Grouping < 30 threshold]
     
@@ -88,7 +88,7 @@ graph TD
     I --> J3[Random Forest + GridSearchCV<br/>324 Fits]
     I --> J4[XGBoost + GridSearchCV<br/>729 Fits]
     
-    J1 & J2 & J3 & J4 --> K[Model Evaluation & Metrics Export<br/>R², MAE, RMSE]
+    J1 & J2 & J3 & J4 --> K[Model Evaluation & Metrics Export<br/>R², MAE in ₹, RMSE in ₹]
     K --> L[Streamlit Web App app.py Deployment]
 ```
 
@@ -96,34 +96,34 @@ graph TD
 
 ## 📊 Dataset Specifications
 
-The dataset models realistic industry compensation data spanning technical, managerial, operational, and executive roles.
+The dataset models realistic domestic Indian industry compensation data spanning technical, managerial, operational, and executive roles denominated in **Indian Rupees (₹ / LPA)**.
 
 - **Sample Size**: 6,700 candidate records
 - **Features**: 5 original attributes + 1 continuous target (`Salary`)
-- **Target Variable**: Annual Salary in USD ($)
+- **Target Variable**: Annual Salary in Indian Rupees (₹2,61,872 – ₹41,32,369)
 
 ### Data Dictionary
 
 | Column Name | Data Type | Type | Description / Valid Values |
 | :--- | :---: | :---: | :--- |
-| **Age** | Numeric | Feature | Candidate age in years (Range: 21 – 62) |
+| **Age** | Numeric | Feature | Candidate age in years (Range: 21 – 65) |
 | **Gender** | Categorical | Feature | Male, Female |
 | **Education Level** | Categorical | Feature | High School, Bachelor's, Master's, PhD |
 | **Job Title** | Categorical | Feature | 48 Unique Titles (e.g., Software Engineer, Data Scientist, Director, CEO) |
-| **Years of Experience** | Numeric | Feature | Professional work experience in years (Range: 0 – 34) |
-| **Salary (Target)** | Numeric | Target | Annual compensation in USD ($26,187 – $413,237) |
+| **Years of Experience** | Numeric | Feature | Professional work experience in years (Range: 0 – 45) |
+| **Salary (Target)** | Numeric | Target | Annual compensation in INR (₹2,61,872 – ₹41,32,369) |
 
 ### Key Summary Statistics
 
-| Metric | Value (USD $) |
-| :--- | :--- |
-| **Minimum Salary** | $26,187 |
-| **25th Percentile ($Q_1$)** | $65,000 |
-| **Median Salary ($Q_2$)** | $102,500 |
-| **75th Percentile ($Q_3$)** | $160,000 |
-| **Maximum Salary** | $413,237 |
-| **Mean Salary ($\mu$)** | $116,972 |
-| **Standard Deviation ($\sigma$)** | $54,821 |
+| Metric | Value (INR ₹) | Value in Lakhs (LPA) |
+| :--- | :--- | :--- |
+| **Minimum Salary** | ₹2,61,872 | ~₹2.62 LPA |
+| **25th Percentile ($Q_1$)** | ₹6,52,982 | ~₹6.53 LPA |
+| **Median Salary ($Q_2$)** | ₹10,25,001 | ~₹10.25 LPA |
+| **75th Percentile ($Q_3$)** | ₹14,55,776 | ~₹14.56 LPA |
+| **Maximum Salary** | ₹41,32,369 | ~₹41.32 LPA |
+| **Mean Salary ($\mu$)** | ₹11,69,725 | ~₹11.70 LPA |
+| **Standard Deviation ($\sigma$)** | ₹6,63,995 | ~₹6.64 LPA |
 
 ---
 
@@ -133,8 +133,8 @@ Comprehensive data analysis was performed to inspect salary distributions, uncov
 
 ### 1. Salary Distribution
 ![Salary Distribution](Images/salary_distribution.png)
-- **Finding**: Salary is right-skewed with a prominent density peak between $50,000 and $140,000.
-- **Insight**: The mean ($116,972) exceeds the median ($102,500), reflecting executive-level salary outliers reaching up to $413,237.
+- **Finding**: Salary is right-skewed with a prominent density peak between ₹5 Lakhs and ₹15 Lakhs LPA.
+- **Insight**: The mean (₹11,69,725) exceeds the median (₹10,25,001), reflecting senior/executive role salary outliers up to ₹41.32 Lakhs.
 
 ---
 
@@ -142,21 +142,21 @@ Comprehensive data analysis was performed to inspect salary distributions, uncov
 ![Salary by Education & Gender](Images/salary_by_education_gender.png)
 - **Education Impact**: Clear monotonic progression where higher academic credentials command higher baseline pay:
   $$\text{PhD} > \text{Master's} > \text{Bachelor's} > \text{High School}$$
-- **Gender Balance**: Average compensation across male and female candidates exhibits minimal variance, confirming overall demographic balance in the synthetic sample.
+- **Gender Balance**: Average compensation across male and female candidates exhibits minimal variance, confirming overall demographic balance in the sample.
 
 ---
 
 ### 3. Years of Experience vs. Salary
 ![Experience vs Salary](Images/experience_vs_salary.png)
-- **Correlation**: Extremely strong positive linear correlation (**$r = 0.9098$**).
+- **Correlation**: Extremely strong positive correlation (**$r = 0.7937$**).
 - **Behavior**: Salary grows continuously with experience, with slight tapering/variance increase at $15+$ years of experience.
 
 ---
 
 ### 4. Highest-Paying Job Titles
 ![Top Paying Jobs](Images/top_paying_jobs.png)
-- **Executive Tier**: C-suite positions (CEO, CTO, CFO, VP of Engineering) rank highest, exceeding average salaries of $250,000+.
-- **Technical & Specialist Tier**: Senior Data Scientists, Cloud Architects, and Engineering Managers command upper-quartile pay ($150,000 - $220,000).
+- **Executive Tier**: C-suite positions (CEO, CTO, CFO, VP of Engineering) rank highest, exceeding average salaries of ₹25 Lakhs - ₹40 Lakhs LPA.
+- **Technical & Specialist Tier**: Senior Data Scientists, Cloud Architects, and Engineering Managers command upper-quartile pay (₹18 Lakhs - ₹28 Lakhs LPA).
 
 ---
 
@@ -165,7 +165,7 @@ Comprehensive data analysis was performed to inspect salary distributions, uncov
 
 | Pairwise Comparison | Correlation Coefficient ($r$) | Interpretation |
 | :--- | :---: | :--- |
-| **Years of Experience vs. Salary** | **+0.9098** | Primary numeric predictor of annual salary |
+| **Years of Experience vs. Salary** | **+0.7937** | Primary numeric predictor of annual salary |
 | **Age vs. Salary** | **+0.5975** | Moderate-strong positive relationship |
 | **Age vs. Years of Experience** | **+0.6688** | Expected collinear relationship between age & career duration |
 
@@ -206,7 +206,7 @@ $$\text{age\_experience\_ratio} = \begin{cases}
 ![Engineered Features](Images/engineered_features.png)
 
 ### Feature Importance Analysis (XGBoost)
-The engineered feature **`experience_level_Expert`** emerged as the **#1 most critical decision splitting feature** with an XGBoost importance weight of **0.545**, proving the tremendous value of custom feature construction.
+The engineered feature **`experience_level_Expert`** emerged as the **#1 most critical decision splitting feature** with an XGBoost importance weight of **0.3518**, proving the tremendous value of custom feature construction.
 
 ---
 
@@ -231,7 +231,7 @@ X_train, X_test, y_train, y_test = train_test_split(
    - `max_depth`: `[10, 15, 20, None]`
    - `min_samples_split`: `[2, 5, 10]`
    - `min_samples_leaf`: `[1, 2, 4]`
-   - **Optimal Parameters Found**: `n_estimators=300`, `max_depth=None`, `min_samples_split=5`, `min_samples_leaf=1`
+   - **Optimal Parameters Found**: `n_estimators=300`, `max_depth=20`, `min_samples_split=2`, `min_samples_leaf=1`
 
 4. **XGBoost Regressor (Tuned)**:
    - **Grid Search Space**: 243 combinations ($\times 3 \text{ folds} = 729 \text{ total fits}$)
@@ -240,7 +240,7 @@ X_train, X_test, y_train, y_test = train_test_split(
    - `learning_rate`: `[0.05, 0.1, 0.2]`
    - `subsample`: `[0.7, 0.8, 1.0]`
    - `colsample_bytree`: `[0.7, 0.8, 1.0]`
-   - **Optimal Parameters Found**: `n_estimators=300`, `max_depth=3`, `learning_rate=0.2`, `subsample=0.8`, `colsample_bytree=1.0`
+   - **Optimal Parameters Found**: `n_estimators=300`, `max_depth=3`, `learning_rate=0.2`, `subsample=0.8`, `colsample_bytree=0.7`
 
 ---
 
@@ -248,12 +248,12 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 ### Comprehensive Model Metrics Comparison
 
-| Model Architecture | Feature Set | $R^2$ Score ↑ | MAE ($) ↓ | RMSE ($) ↓ | MAE Reduction (%) |
+| Model Architecture | Feature Set | $R^2$ Score ↑ | MAE (₹) ↓ | RMSE (₹) ↓ | MAE Reduction (%) |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| **Linear Regression (Baseline)** | Original (5 features) | 0.9565 | $9,807.88 | $13,537.36 | Baseline |
-| **Linear Regression (Engineered)** | Original + Engineered | 0.9567 | $9,789.90 | $13,502.79 | -0.18% |
-| **Random Forest (Tuned)** | Original + Engineered | 0.9637 | $8,516.99 | $12,369.78 | -13.16% |
-| 🏆 **XGBoost Regressor (Tuned)** | **Original + Engineered** | **0.9660** | **$8,320.79** | **$11,971.31** | **-15.16%** |
+| **Linear Regression (Baseline)** | Original (5 features) | 0.9565 | ₹98,078.76 | ₹1,35,373.59 | Baseline |
+| **Linear Regression (Engineered)** | Original + Engineered | 0.9567 | ₹97,898.96 | ₹1,35,027.91 | -0.18% |
+| **Random Forest (Tuned)** | Original + Engineered | 0.9637 | ₹85,170.51 | ₹1,23,676.25 | -13.16% |
+| 🏆 **XGBoost Regressor (Tuned)** | **Original + Engineered** | **0.9666** | **₹82,518.75** | **₹1,18,609.59** | **-15.86%** |
 
 ---
 
@@ -272,8 +272,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 ## 💡 Key Business Takeaways & HR Recommendations
 
-1. **Adopt XGBoost for Automated Offers**: With an $R^2$ of **0.9660** and an average error of **$8,320**, XGBoost provides high accuracy suitable for automating standard HR candidate offer letters.
-2. **Prioritize Experience & Career Stage**: Years of experience ($r = 0.91$) and Expert-level experience bucketing are the strongest drivers of salary compensation.
+1. **Adopt XGBoost for Automated Offers**: With an $R^2$ of **0.9666** and an average error of **₹82,518** (~₹82.5k), XGBoost provides high accuracy suitable for automating standard HR candidate offer letters in Indian Rupees.
+2. **Prioritize Experience & Career Stage**: Years of experience ($r = 0.79$) and Expert-level experience bucketing are the strongest drivers of salary compensation.
 3. **Incorporate Job Title Micro-Tiers**: Job titles account for variance that experience alone cannot explain (e.g., Executive titles command up to 3x pay premiums).
 4. **Regularize Internal Equity**: Using model-generated compensation ranges prevents internal pay disparity between existing staff and new hires.
 
@@ -284,21 +284,21 @@ X_train, X_test, y_train, y_test = train_test_split(
 ```
 d:/Salary_Prediction/
 ├── Dataset/
-│   ├── salary_prediction_data.csv    # Synthetic dataset (6,700 records, schema-matched)
-│   ├── generate_salary_data.py       # Realistic synthetic data generation script
-│   └── metrics.json                  # Model performance metrics output JSON
+│   ├── salary_prediction_data.csv    # Realistic Indian dataset in ₹ (6,700 records, 2.6L-41L LPA)
+│   ├── generate_salary_data.py       # Data generation script with domestic Indian scale factor
+│   └── metrics.json                  # Model performance metrics output JSON in ₹
 ├── Images/
-│   ├── salary_distribution.png       # EDA: Target distribution plot
-│   ├── salary_by_education_gender.png # EDA: Education & Gender box plots
-│   ├── experience_vs_salary.png      # EDA: Scatter plot experience vs salary
-│   ├── top_paying_jobs.png           # EDA: Top 10 highest paying job titles
+│   ├── salary_distribution.png       # EDA: Target distribution plot in ₹
+│   ├── salary_by_education_gender.png # EDA: Education & Gender box plots in ₹
+│   ├── experience_vs_salary.png      # EDA: Scatter plot experience vs salary in ₹
+│   ├── top_paying_jobs.png           # EDA: Top 10 highest paying job titles in ₹
 │   ├── correlation_heatmap.png       # EDA: Pairwise Pearson correlation matrix
-│   ├── engineered_features.png       # Feature Engineering: Bucket counts & ratio analysis
-│   ├── model_comparison.png          # Model Evaluation: Bar chart of R², MAE, RMSE
-│   └── predicted_vs_actual.png       # Model Evaluation: Champion model scatter plot
+│   ├── engineered_features.png       # Feature Engineering: Bucket counts & ratio analysis in ₹
+│   ├── model_comparison.png          # Model Evaluation: Bar chart of R², MAE, RMSE in ₹
+│   └── predicted_vs_actual.png       # Model Evaluation: Champion model scatter plot in ₹
 ├── Notebook/
 │   └── Salary_Prediction.ipynb       # Jupyter notebook with executable pipeline cells
-├── app.py                            # Multi-tab interactive Streamlit web dashboard
+├── app.py                            # Multi-tab interactive Streamlit web dashboard in ₹
 ├── run_all.py                        # Standalone Python script running full training pipeline
 ├── requirements.txt                  # Python dependencies file
 ├── .gitignore                        # Git exclusion rules
@@ -346,13 +346,13 @@ pip install -r requirements.txt
 ```bash
 streamlit run app.py
 ```
-*Opens automatically in your browser at `http://localhost:8501`.*
+*Opens automatically in your browser at `http://localhost:8501` with realistic INR ₹ LPA formatting.*
 
 ### Option B: Execute Complete ML Pipeline via Python Script
 ```bash
 python run_all.py
 ```
-*Runs data processing, model training, grid search CV tuning, exports `metrics.json`, and updates all plots under `Images/`.*
+*Runs data processing, model training, grid search CV tuning, exports `metrics.json`, and updates all plots under `Images/` with ₹ currency.*
 
 ### Option C: Launch Jupyter Notebook
 ```bash
@@ -368,7 +368,7 @@ To deploy your own live version of the dashboard to Streamlit Cloud:
 1. **Push Changes to GitHub**:
    ```bash
    git add .
-   git commit -m "Deploy Salary Predictor Pro to Streamlit Cloud"
+   git commit -m "Rescale Salary dataset to realistic Indian Market (LPA in ₹) standards"
    git push origin main
    ```
 
@@ -386,14 +386,14 @@ To deploy your own live version of the dashboard to Streamlit Cloud:
 
 ## ✅ Submission Verification Checklist
 
-- [x] **Dataset Loaded & Cleaned**: 6,700 rows, missing values checked, rare job titles grouped (<30 threshold).
-- [x] **EDA Visualizations Generated**: 5 key plots created and rendered in high resolution under `Images/`.
+- [x] **Dataset Loaded & Cleaned**: 6,700 rows in realistic domestic Indian Rupees (₹), missing values checked, rare job titles grouped (<30 threshold).
+- [x] **EDA Visualizations Generated**: 5 key plots created with Rupee (₹) axes and labels under `Images/`.
 - [x] **Feature Engineering Implemented**: Created `experience_level` categorical buckets and `age_experience_ratio` numeric feature.
 - [x] **Models Benchmarked**: Linear Regression Baseline, Linear Regression (Engineered), Tuned Random Forest, and Tuned XGBoost.
 - [x] **GridSearchCV Optimization**: Executed hyperparameter grid search across 324 RF fits and 729 XGBoost fits.
-- [x] **Interactive Dashboard Created**: Production-grade Streamlit application `app.py` fully configured.
+- [x] **Interactive Dashboard Created**: Production-grade Streamlit application `app.py` fully configured with Rupee (₹) formatting.
 - [x] **Automated Execution Script**: `run_all.py` pipeline script operational.
-- [x] **Documentation Complete**: Professional `README.md` formatted with badges, tables, Mermaid workflow, and formulas.
+- [x] **Documentation Complete**: Professional `README.md` formatted with badges, tables, Mermaid workflow, and Rupee currency metrics.
 
 ---
 

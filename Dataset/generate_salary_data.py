@@ -146,8 +146,12 @@ for i in range(NUM_SAMPLES):
     gender_factor = 1.0 if gender == "Male" else 0.97
     noise = np.random.normal(1, 0.08)
 
-    salary = base * edu_mult * exp_factor * age_factor * gender_factor * noise * 1000
-    salary = max(salary, 20000)
+    # Realistic domestic Indian salary scaling (in ₹ / LPA)
+    # Multiplier of 10,000 yields realistic domestic Indian compensation:
+    # Entry level (0-2 yrs): ₹2.5L - ₹7.5L, Mid level: ₹8L - ₹20L, Senior: ₹20L - ₹45L, Executive: ₹50L - ₹1.6 Cr
+    INR_SCALE_FACTOR = 10000
+    salary = base * edu_mult * exp_factor * age_factor * gender_factor * noise * INR_SCALE_FACTOR
+    salary = max(salary, 220000)
     salaries.append(int(round(salary)))
 
 df = pd.DataFrame({
@@ -166,9 +170,9 @@ df.to_csv(output_path, index=False)
 print(f"Dataset saved to: {output_path}")
 print(f"Shape: {df.shape}")
 print(f"\nColumns: {list(df.columns)}")
-print(f"\nSalary range: ${df['Salary'].min():,.0f} - ${df['Salary'].max():,.0f}")
-print(f"Average salary: ${df['Salary'].mean():,.0f}")
-print(f"Median salary: ${df['Salary'].median():,.0f}")
+print(f"\nSalary range: ₹{df['Salary'].min():,.0f} - ₹{df['Salary'].max():,.0f}")
+print(f"Average salary: ₹{df['Salary'].mean():,.0f}")
+print(f"Median salary: ₹{df['Salary'].median():,.0f}")
 print(f"\nUnique Job Titles: {df['Job Title'].nunique()}")
 print(f"\nSample data:")
 print(df.head(10))

@@ -96,15 +96,15 @@ plt.rcParams['font.size'] = 12
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 sns.histplot(df['Salary'], bins=50, kde=True, color='steelblue', ax=axes[0])
 axes[0].set_title('Distribution of Salary', fontsize=14, fontweight='bold')
-axes[0].set_xlabel('Salary ($)')
+axes[0].set_xlabel('Salary (₹)')
 axes[0].set_ylabel('Frequency')
-axes[0].axvline(df['Salary'].mean(), color='red', linestyle='--', linewidth=2, label=f'Mean: ${df["Salary"].mean():,.0f}')
-axes[0].axvline(df['Salary'].median(), color='green', linestyle='--', linewidth=2, label=f'Median: ${df["Salary"].median():,.0f}')
+axes[0].axvline(df['Salary'].mean(), color='red', linestyle='--', linewidth=2, label=f'Mean: ₹{df["Salary"].mean():,.0f}')
+axes[0].axvline(df['Salary'].median(), color='green', linestyle='--', linewidth=2, label=f'Median: ₹{df["Salary"].median():,.0f}')
 axes[0].legend()
 
 sns.boxplot(y=df['Salary'], color='lightcoral', ax=axes[1])
 axes[1].set_title('Salary Box Plot', fontsize=14, fontweight='bold')
-axes[1].set_ylabel('Salary ($)')
+axes[1].set_ylabel('Salary (₹)')
 
 plt.tight_layout()
 plt.savefig(os.path.join(IMAGES_DIR, 'salary_distribution.png'), dpi=150, bbox_inches='tight')
@@ -117,19 +117,19 @@ sns.barplot(data=df, x='Education Level', y='Salary', order=edu_order,
             palette='Blues_d', ax=axes[0], ci=None)
 axes[0].set_title('Average Salary by Education Level', fontsize=14, fontweight='bold')
 axes[0].set_xlabel('Education Level')
-axes[0].set_ylabel('Average Salary ($)')
+axes[0].set_ylabel('Average Salary (₹)')
 axes[0].tick_params(axis='x', rotation=15)
 for i, p in enumerate(axes[0].patches):
-    axes[0].annotate(f'${p.get_height():,.0f}',
+    axes[0].annotate(f'₹{p.get_height():,.0f}',
                      (p.get_x() + p.get_width() / 2., p.get_height()),
                      ha='center', va='bottom', fontsize=10, fontweight='bold')
 
 sns.barplot(data=df, x='Gender', y='Salary', palette='Set2', ax=axes[1], ci=None)
 axes[1].set_title('Average Salary by Gender', fontsize=14, fontweight='bold')
 axes[1].set_xlabel('Gender')
-axes[1].set_ylabel('Average Salary ($)')
+axes[1].set_ylabel('Average Salary (₹)')
 for i, p in enumerate(axes[1].patches):
-    axes[1].annotate(f'${p.get_height():,.0f}',
+    axes[1].annotate(f'₹{p.get_height():,.0f}',
                      (p.get_x() + p.get_width() / 2., p.get_height()),
                      ha='center', va='bottom', fontsize=10, fontweight='bold')
 
@@ -144,13 +144,13 @@ sns.regplot(data=df, x='Years of Experience', y='Salary',
             line_kws={'color': 'red', 'linewidth': 2}, ax=axes[0])
 axes[0].set_title('Years of Experience vs Salary', fontsize=14, fontweight='bold')
 axes[0].set_xlabel('Years of Experience')
-axes[0].set_ylabel('Salary ($)')
+axes[0].set_ylabel('Salary (₹)')
 
 hb = axes[1].hexbin(df['Years of Experience'], df['Salary'], gridsize=25,
                     cmap='Blues', mincnt=1, edgecolors='none')
 axes[1].set_title('Experience vs Salary (Density View)', fontsize=14, fontweight='bold')
 axes[1].set_xlabel('Years of Experience')
-axes[1].set_ylabel('Salary ($)')
+axes[1].set_ylabel('Salary (₹)')
 cb = plt.colorbar(hb, ax=axes[1])
 cb.set_label('Count')
 
@@ -169,10 +169,10 @@ bars = ax.barh(range(len(avg_salary_by_job)), avg_salary_by_job.values, color=co
 ax.set_yticks(range(len(avg_salary_by_job)))
 ax.set_yticklabels(avg_salary_by_job.index)
 ax.set_title(f'Top {top_n} Highest Paying Job Titles', fontsize=14, fontweight='bold')
-ax.set_xlabel('Average Salary ($)')
+ax.set_xlabel('Average Salary (₹)')
 ax.invert_yaxis()
 for i, (bar, val) in enumerate(zip(bars, avg_salary_by_job.values)):
-    ax.text(val + 500, bar.get_y() + bar.get_height()/2, f'${val:,.0f}',
+    ax.text(val + 500, bar.get_y() + bar.get_height()/2, f'₹{val:,.0f}',
             va='center', fontsize=9, fontweight='bold')
 
 plt.tight_layout()
@@ -233,13 +233,13 @@ sns.boxplot(data=df_fe, x='experience_level', y='Salary', order=exp_order,
             palette='viridis', ax=axes[0])
 axes[0].set_title('Salary by Experience Level', fontsize=14, fontweight='bold')
 axes[0].set_xlabel('Experience Level')
-axes[0].set_ylabel('Salary ($)')
+axes[0].set_ylabel('Salary (₹)')
 
 sns.scatterplot(data=df_fe, x='age_experience_ratio', y='Salary',
                 alpha=0.4, hue='experience_level', palette='viridis', ax=axes[1])
 axes[1].set_title('Age-Experience Ratio vs Salary', fontsize=14, fontweight='bold')
 axes[1].set_xlabel('Age / Experience Ratio')
-axes[1].set_ylabel('Salary ($)')
+axes[1].set_ylabel('Salary (₹)')
 axes[1].legend(title='Experience Level')
 
 plt.tight_layout()
@@ -281,8 +281,8 @@ rmse_base = np.sqrt(mean_squared_error(y_test_base, y_pred_base))
 
 print(f"\nBASELINE MODEL:")
 print(f"  R²:  {r2_base:.4f}")
-print(f"  MAE: ${mae_base:,.2f}")
-print(f"  RMSE: ${rmse_base:,.2f}")
+print(f"  MAE: ₹{mae_base:,.2f}")
+print(f"  RMSE: ₹{rmse_base:,.2f}")
 
 X_engineered = df_fe[['Age', 'Gender', 'Education Level', 'Job Title',
                        'Years of Experience', 'experience_level',
@@ -307,8 +307,8 @@ rmse_eng = np.sqrt(mean_squared_error(y_test_eng, y_pred_eng))
 
 print(f"\nFEATURE-ENGINEERED MODEL:")
 print(f"  R²:  {r2_eng:.4f}")
-print(f"  MAE: ${mae_eng:,.2f}")
-print(f"  RMSE: ${rmse_eng:,.2f}")
+print(f"  MAE: ₹{mae_eng:,.2f}")
+print(f"  RMSE: ₹{rmse_eng:,.2f}")
 
 print("\n" + "=" * 60)
 print("HYPERPARAMETER TUNING WITH GridSearchCV")
@@ -356,8 +356,8 @@ rmse_rf = np.sqrt(mean_squared_error(y_test_eng, y_pred_rf))
 print(f"\nTUNED RANDOM FOREST (Test Set):")
 print(f"  Best Params: {rf_grid.best_params_}")
 print(f"  R²:  {r2_rf:.4f}")
-print(f"  MAE: ${mae_rf:,.2f}")
-print(f"  RMSE: ${rmse_rf:,.2f}")
+print(f"  MAE: ₹{mae_rf:,.2f}")
+print(f"  RMSE: ₹{rmse_rf:,.2f}")
 
 print("\n" + "-" * 60)
 print("TUNING XGBOOST...")
@@ -395,8 +395,8 @@ rmse_xgb = np.sqrt(mean_squared_error(y_test_eng, y_pred_xgb))
 print(f"\nTUNED XGBOOST (Test Set):")
 print(f"  Best Params: {xgb_grid.best_params_}")
 print(f"  R²:  {r2_xgb:.4f}")
-print(f"  MAE: ${mae_xgb:,.2f}")
-print(f"  RMSE: ${rmse_xgb:,.2f}")
+print(f"  MAE: ₹{mae_xgb:,.2f}")
+print(f"  RMSE: ₹{rmse_xgb:,.2f}")
 
 print("\n" + "=" * 60)
 print("6. MODEL EVALUATION & COMPARISON")
@@ -405,8 +405,8 @@ print("=" * 60)
 print(f"\n{'Metric':<20} {'LinReg Base':<15} {'LinReg Eng':<15} {'RandomForest':<15} {'XGBoost':<15}")
 print("-" * 80)
 print(f"{'R² Score':<20} {r2_base:<15.4f} {r2_eng:<15.4f} {r2_rf:<15.4f} {r2_xgb:<15.4f}")
-print(f"{'MAE':<20} ${mae_base:<13,.2f} ${mae_eng:<13,.2f} ${mae_rf:<13,.2f} ${mae_xgb:<13,.2f}")
-print(f"{'RMSE':<20} ${rmse_base:<13,.2f} ${rmse_eng:<13,.2f} ${rmse_rf:<13,.2f} ${rmse_xgb:<13,.2f}")
+print(f"{'MAE':<20} ₹{mae_base:<13,.2f} ₹{mae_eng:<13,.2f} ₹{mae_rf:<13,.2f} ₹{mae_xgb:<13,.2f}")
+print(f"{'RMSE':<20} ₹{rmse_base:<13,.2f} ₹{rmse_eng:<13,.2f} ₹{rmse_rf:<13,.2f} ₹{rmse_xgb:<13,.2f}")
 
 fig, axes = plt.subplots(1, 2, figsize=(16, 6))
 
@@ -435,10 +435,10 @@ bars2 = ax2.bar(x, model_mae_vals, color=colors, edgecolor=edgecolors, width=0.6
 ax2.set_title('MAE Comparison Across Models', fontsize=14, fontweight='bold')
 ax2.set_xticks(x)
 ax2.set_xticklabels(model_names, fontsize=10)
-ax2.set_ylabel('MAE ($)')
+ax2.set_ylabel('MAE (₹)')
 for bar, val in zip(bars2, model_mae_vals):
     ax2.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 200,
-            f'${val:,.0f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+            f'₹{val:,.0f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
 
 plt.tight_layout()
 plt.savefig(os.path.join(IMAGES_DIR, 'model_comparison.png'), dpi=150, bbox_inches='tight')
@@ -453,8 +453,8 @@ ax.scatter(y_test_eng, best_preds, alpha=0.4, s=15, c='steelblue', edgecolors='n
 min_val = min(y_test_eng.min(), best_preds.min())
 max_val = max(y_test_eng.max(), best_preds.max())
 ax.plot([min_val, max_val], [min_val, max_val], 'r--', linewidth=2, label='Perfect Prediction')
-ax.set_xlabel('Actual Salary ($)', fontsize=12)
-ax.set_ylabel('Predicted Salary ($)', fontsize=12)
+ax.set_xlabel('Actual Salary (₹)', fontsize=12)
+ax.set_ylabel('Predicted Salary (₹)', fontsize=12)
 ax.set_title(f'Predicted vs Actual Salary ({best_model_name} Model)', fontsize=14, fontweight='bold')
 ax.legend()
 ax.annotate(f'R² = {r2_xgb:.4f}',

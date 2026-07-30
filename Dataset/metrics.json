@@ -2,13 +2,13 @@
   "linear_regression": {
     "baseline": {
       "r2": 0.9565,
-      "mae": 9807.88,
-      "rmse": 13537.36
+      "mae": 98078.76,
+      "rmse": 135373.59
     },
     "engineered": {
       "r2": 0.9567,
-      "mae": 9789.9,
-      "rmse": 13502.79
+      "mae": 97898.96,
+      "rmse": 135027.91
     },
     "improvement": {
       "r2_pct": 0.02,
@@ -18,13 +18,13 @@
   },
   "random_forest": {
     "r2": 0.9637,
-    "mae": 8516.99,
-    "rmse": 12369.78
+    "mae": 85170.51,
+    "rmse": 123676.25
   },
   "xgboost": {
-    "r2": 0.966,
-    "mae": 8320.79,
-    "rmse": 11971.31
+    "r2": 0.9666,
+    "mae": 82518.75,
+    "rmse": 118609.59
   },
   "best_model": "XGBoost",
   "dataset": {
@@ -32,9 +32,9 @@
     "features_original": 5,
     "features_engineered": 2,
     "job_titles": 48,
-    "salary_mean": 116972,
-    "salary_median": 102500,
-    "salary_min": 26187,
-    "salary_max": 413237
+    "salary_mean": 1169725,
+    "salary_median": 1025001,
+    "salary_min": 261872,
+    "salary_max": 4132369
   }
 }

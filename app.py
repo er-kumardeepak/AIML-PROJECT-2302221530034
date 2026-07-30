@@ -318,8 +318,8 @@ if page.startswith("🎯"):
             st.markdown(f"""
             <div class="prediction-box">
                 <div style="font-size:1rem; opacity:0.85; margin-bottom:0.3rem;">{selected_name} Prediction</div>
-                <div class="prediction-amount">${selected_pred:,.0f}</div>
-                <div style="font-size:0.9rem; opacity:0.75;">Annual Salary</div>
+                <div class="prediction-amount">₹{selected_pred:,.0f}</div>
+                <div style="font-size:0.9rem; opacity:0.75;">Annual Salary (₹)</div>
             </div>
             """, unsafe_allow_html=True)
 
@@ -341,16 +341,16 @@ if page.startswith("🎯"):
         pred_data = pd.DataFrame({
             'Model': ['Linear Regression (Baseline)', 'Linear Regression (Engineered)',
                       'Random Forest (Tuned)', 'XGBoost (Tuned)'],
-            'Predicted Salary': [f"${pred_lr_b:,.0f}", f"${pred_lr_e:,.0f}",
-                                 f"${pred_rf:,.0f}", f"${pred_xgb:,.0f}"],
+            'Predicted Salary': [f"₹{pred_lr_b:,.0f}", f"₹{pred_lr_e:,.0f}",
+                                 f"₹{pred_rf:,.0f}", f"₹{pred_xgb:,.0f}"],
             'R² Score': [f"{metrics['linear_regression']['baseline']['r2']:.4f}",
                          f"{metrics['linear_regression']['engineered']['r2']:.4f}",
                          f"{metrics['random_forest']['r2']:.4f}",
                          f"{metrics['xgboost']['r2']:.4f}"],
-            'MAE': [f"${metrics['linear_regression']['baseline']['mae']:,.0f}",
-                    f"${metrics['linear_regression']['engineered']['mae']:,.0f}",
-                    f"${metrics['random_forest']['mae']:,.0f}",
-                    f"${metrics['xgboost']['mae']:,.0f}"]
+            'MAE': [f"₹{metrics['linear_regression']['baseline']['mae']:,.0f}",
+                    f"₹{metrics['linear_regression']['engineered']['mae']:,.0f}",
+                    f"₹{metrics['random_forest']['mae']:,.0f}",
+                    f"₹{metrics['xgboost']['mae']:,.0f}"]
         })
 
         st.dataframe(pred_data, hide_index=True, use_container_width=True)
@@ -362,12 +362,12 @@ if page.startswith("🎯"):
         colors_bar = ['#8A9BB0', '#D4783C', '#0B8754', '#1E6BB8']
         bars = ax.bar(models_names, preds, color=colors_bar, edgecolor='white', width=0.6)
         ax.set_title('Salary Predictions by Model', fontsize=14, fontweight='bold', pad=15)
-        ax.set_ylabel('Predicted Salary ($)', fontsize=12)
+        ax.set_ylabel('Predicted Salary (₹)', fontsize=12)
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         for bar, val in zip(bars, preds):
             ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 800,
-                    f'${val:,.0f}', ha='center', fontsize=10, fontweight='bold')
+                    f'₹{val:,.0f}', ha='center', fontsize=10, fontweight='bold')
         st.pyplot(fig)
         plt.close()
 
@@ -383,12 +383,12 @@ if page.startswith("🎯"):
             st.markdown(f"""
             | Range | Amount |
             |-------|--------|
-            | 📉 Dataset Minimum | ${salary_min:,} |
-            | 📊 Dataset Median | ${salary_median:,} |
-            | 📈 Dataset Average | ${salary_mean:,} |
-            | 📈 Dataset Maximum | ${salary_max:,} |
+            | 📉 Dataset Minimum | ₹{salary_min:,} |
+            | 📊 Dataset Median | ₹{salary_median:,} |
+            | 📈 Dataset Average | ₹{salary_mean:,} |
+            | 📈 Dataset Maximum | ₹{salary_max:,} |
 
-            **Predicted Salary: ${selected_pred:,.0f}**
+            **Predicted Salary: ₹{selected_pred:,.0f}**
 
             This prediction is based on **{model_choice}** — our best performing model.
             The model uses **Years of Experience** as the strongest predictor, alongside
@@ -420,14 +420,14 @@ elif page.startswith("📊"):
     with col3:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-value">${metrics['dataset']['salary_mean']:,}</div>
+            <div class="metric-value">₹{metrics['dataset']['salary_mean']:,}</div>
             <div class="metric-label">Mean Salary</div>
         </div>
         """, unsafe_allow_html=True)
     with col4:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-value">${metrics['dataset']['salary_median']:,}</div>
+            <div class="metric-value">₹{metrics['dataset']['salary_median']:,}</div>
             <div class="metric-label">Median Salary</div>
         </div>
         """, unsafe_allow_html=True)
@@ -441,7 +441,7 @@ elif page.startswith("📊"):
 
     with tab1:
         st.markdown("### Salary Distribution")
-        st.markdown("The salary data is right-skewed — most salaries fall between **$50K–$150K**.")
+        st.markdown("The salary data is right-skewed — most salaries fall between **₹40 Lakhs–₹1.2 Crores**.")
 
         img_path = os.path.join(IMAGES_DIR, 'salary_distribution.png')
         if os.path.exists(img_path):
@@ -449,8 +449,8 @@ elif page.startswith("📊"):
         else:
             fig, axes = plt.subplots(1, 2, figsize=(14, 5))
             sns.histplot(df['Salary'], bins=50, kde=True, color='steelblue', ax=axes[0])
-            axes[0].axvline(df['Salary'].mean(), color='r', ls='--', label=f'Mean: ${df["Salary"].mean():,.0f}')
-            axes[0].axvline(df['Salary'].median(), color='g', ls='--', label=f'Median: ${df["Salary"].median():,.0f}')
+            axes[0].axvline(df['Salary'].mean(), color='r', ls='--', label=f'Mean: ₹{df["Salary"].mean():,.0f}')
+            axes[0].axvline(df['Salary'].median(), color='g', ls='--', label=f'Median: ₹{df["Salary"].median():,.0f}')
             axes[0].legend()
             sns.boxplot(y=df['Salary'], color='lightcoral', ax=axes[1])
             plt.tight_layout()
@@ -459,7 +459,7 @@ elif page.startswith("📊"):
 
         insight_col1, insight_col2 = st.columns(2)
         with insight_col1:
-            st.info("📌 **Key Insight:** The mean ($116,972) is higher than the median ($102,500), indicating high-salary outliers pulling the average up.")
+            st.info(f"📌 **Key Insight:** The mean (₹{df['Salary'].mean():,.0f}) is higher than the median (₹{df['Salary'].median():,.0f}), indicating high-salary executive outliers pulling the average up.")
         with insight_col2:
             st.info("📌 **Business Impact:** HR should use median rather than mean as a reference for typical salary ranges.")
 
@@ -475,7 +475,7 @@ elif page.startswith("📊"):
             sns.barplot(data=df, x='Gender', y='Salary', palette='Set2', ax=axes[1], ci=None)
             for ax_ in axes:
                 for p in ax_.patches:
-                    ax_.annotate(f'${p.get_height():,.0f}', (p.get_x()+p.get_width()/2, p.get_height()),
+                    ax_.annotate(f'₹{p.get_height():,.0f}', (p.get_x()+p.get_width()/2, p.get_height()),
                                 ha='center', va='bottom', fontsize=10, fontweight='bold')
             plt.tight_layout()
             st.pyplot(fig)
@@ -485,7 +485,7 @@ elif page.startswith("📊"):
         with insight_col1:
             edu_stats = df.groupby('Education Level')['Salary'].mean().round(0).astype(int)
             master_salary = edu_stats["Master's"]
-            edu_msg = f"📌 **Education Impact:** PhD holders earn the highest (${edu_stats['PhD']:,}), followed by Master's (${master_salary:,})."
+            edu_msg = f"📌 **Education Impact:** PhD holders earn the highest (₹{edu_stats['PhD']:,}), followed by Master's (₹{master_salary:,})."
             st.info(edu_msg)
         with insight_col2:
             gender_stats = df.groupby('Gender')['Salary'].mean().round(0).astype(int)
@@ -523,7 +523,7 @@ elif page.startswith("📊"):
             ax.set_yticklabels(avg.index)
             ax.invert_yaxis()
             for bar, val in zip(bars, avg.values):
-                ax.text(val + 500, bar.get_y() + bar.get_height()/2, f'${val:,.0f}',
+                ax.text(val + 500, bar.get_y() + bar.get_height()/2, f'₹{val:,.0f}',
                        va='center', fontsize=9, fontweight='bold')
             plt.tight_layout()
             st.pyplot(fig)
@@ -568,11 +568,11 @@ elif page.startswith("📈"):
         </div>
         <div class="metric-card" style="flex:1; min-width:160px;">
             <div class="metric-label">MAE</div>
-            <div class="metric-value">${metrics['xgboost']['mae']:,.0f}</div>
+            <div class="metric-value">₹{metrics['xgboost']['mae']:,.0f}</div>
         </div>
         <div class="metric-card" style="flex:1; min-width:160px;">
             <div class="metric-label">RMSE</div>
-            <div class="metric-value">${metrics['xgboost']['rmse']:,.0f}</div>
+            <div class="metric-value">₹{metrics['xgboost']['rmse']:,.0f}</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -585,14 +585,14 @@ elif page.startswith("📈"):
                      f"{metrics['linear_regression']['engineered']['r2']:.4f}",
                      f"{metrics['random_forest']['r2']:.4f}",
                      f"{metrics['xgboost']['r2']:.4f}"],
-        'MAE': [f"${metrics['linear_regression']['baseline']['mae']:,.2f}",
-                f"${metrics['linear_regression']['engineered']['mae']:,.2f}",
-                f"${metrics['random_forest']['mae']:,.2f}",
-                f"${metrics['xgboost']['mae']:,.2f}"],
-        'RMSE': [f"${metrics['linear_regression']['baseline']['rmse']:,.2f}",
-                 f"${metrics['linear_regression']['engineered']['rmse']:,.2f}",
-                 f"${metrics['random_forest']['rmse']:,.2f}",
-                 f"${metrics['xgboost']['rmse']:,.2f}"]
+        'MAE': [f"₹{metrics['linear_regression']['baseline']['mae']:,.2f}",
+                f"₹{metrics['linear_regression']['engineered']['mae']:,.2f}",
+                f"₹{metrics['random_forest']['mae']:,.2f}",
+                f"₹{metrics['xgboost']['mae']:,.2f}"],
+        'RMSE': [f"₹{metrics['linear_regression']['baseline']['rmse']:,.2f}",
+                 f"₹{metrics['linear_regression']['engineered']['rmse']:,.2f}",
+                 f"₹{metrics['random_forest']['rmse']:,.2f}",
+                 f"₹{metrics['xgboost']['rmse']:,.2f}"]
     })
     st.dataframe(comp_data, hide_index=True, use_container_width=True)
 
@@ -682,7 +682,7 @@ elif page.startswith("ℹ️"):
         <ul>
             <li><strong>Best Model:</strong> XGBoost (Tuned)</li>
             <li><strong>R² Score:</strong> {metrics['xgboost']['r2']:.4f}</li>
-            <li><strong>MAE:</strong> ${metrics['xgboost']['mae']:,.2f}</li>
+            <li><strong>MAE:</strong> ₹{metrics['xgboost']['mae']:,.2f}</li>
             <li><strong>Improvement:</strong> +{r2_improvement}% over baseline</li>
             <li><strong>Strongest Predictor:</strong> Years of Experience</li>
         </ul>
@@ -696,8 +696,8 @@ elif page.startswith("ℹ️"):
             <li><strong>Records:</strong> {metrics['dataset']['samples']:,}</li>
             <li><strong>Features:</strong> {metrics['dataset']['features_original']} original + {metrics['dataset']['features_engineered']} engineered</li>
             <li><strong>Job Titles:</strong> {metrics['dataset']['job_titles']} unique</li>
-            <li><strong>Salary Range:</strong> ${metrics['dataset']['salary_min']:,} – ${metrics['dataset']['salary_max']:,}</li>
-            <li><strong>Average Salary:</strong> ${metrics['dataset']['salary_mean']:,}</li>
+            <li><strong>Salary Range:</strong> ₹{metrics['dataset']['salary_min']:,} – ₹{metrics['dataset']['salary_max']:,}</li>
+            <li><strong>Average Salary:</strong> ₹{metrics['dataset']['salary_mean']:,}</li>
         </ul>
         </div>
         """, unsafe_allow_html=True)
